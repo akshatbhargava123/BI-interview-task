@@ -5,8 +5,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import {
 	FakeServer,
-	ServerSideDatasource,
-	countries
+	ServerSideDatasource
 } from './utils';
 
 class Table extends Component {
@@ -28,38 +27,21 @@ class Table extends Component {
 				},
 				{
 					headerName: 'Age',
-					field: 'age',
-					filter: "agNumberColumnFilter",
-					filterParams: {
-						filterOptions: ["equals", "lessThan", "greaterThan"],
-						suppressAndOrCondition: true
-					}
+					field: 'age'
 				},
 				{
 					headerName: 'Country',
-					field: 'country',
-					filter: "agSetColumnFilter",
-          filterParams: { values: countries() }
+					field: 'country'
 				},
 				{
 					headerName: 'Date',
-					field: 'date',
-					filter: "agSetColumnFilter",
-          filterParams: {
-            values: ["2000", "2004", "2008", "2012"]
-          }
-				},
-				{
-					headerName: 'Sport',
-					field: 'sport',
-					filter: false,
-					sortable: false
+					field: 'date'
 				}
 			],
       defaultColDef: {
 				resizable: true,
 				sortable: true,
-				filter: true,
+				filter: false,
 				cellRenderer: 'loadingCellRenderer'
 			},
       components: {
@@ -105,7 +87,6 @@ class Table extends Component {
 		fetch('https://raw.githubusercontent.com/akshatbhargava123/BI-interview-task/master/src/assets/fakeData.json')
 			.then(res => res.json())
 			.then(data => {
-				console.log(data);
 				updateData(data);
 			});
 	}
