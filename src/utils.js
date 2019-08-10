@@ -1,8 +1,9 @@
 export function ServerSideDatasource(server) {
   return {
+		rowCount: null,
     getRows(params) {
       setTimeout(function() {
-        var response = server.getResponse(params.request);
+        const response = server.getResponse(params);
         if (response.success) {
           params.successCallback(response.rows, response.lastRow);
         } else {
@@ -17,8 +18,8 @@ export function FakeServer(allData) {
   return {
     getResponse(request) {
       console.log("asking for rows: " + request.startRow + " to " + request.endRow);
-      var rowsThisPage = allData.slice(request.startRow, request.endRow);
-      var lastRow = allData.length <= request.endRow ? allData.length : -1;
+      const rowsThisPage = allData.slice(request.startRow, request.endRow);
+      const lastRow = allData.length <= request.endRow ? allData.length : -1;
       return {
         success: true,
         rows: rowsThisPage,
