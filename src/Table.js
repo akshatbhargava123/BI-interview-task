@@ -3,30 +3,59 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
-import { FakeServer, ServerSideDatasource } from './utils';
+import {
+	FakeServer,
+	ServerSideDatasource,
+	countries
+} from './utils';
 
 class Table extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			columnDefs: [{
-				headerName: "ID",
-				width: 50,
-				valueGetter: "node.id",
-				suppressMenu: true,
-				sortable: false
-			},{
-				headerName: 'Name', field: 'athlete'
-			}, {
-				headerName: 'Age', field: 'age'
-			}, {
-				headerName: 'Country', field: 'country'
-			}, {
-				headerName: 'Date', field: 'date'
-			}, {
-				headerName: 'Sport', field: 'sport'
-			}],
+			columnDefs: [
+				{
+					headerName: "ID",
+					width: 50,
+					valueGetter: "node.id",
+					suppressMenu: true,
+					sortable: false
+				},
+				{
+					headerName: 'Name',
+					field: 'athlete'
+				},
+				{
+					headerName: 'Age',
+					field: 'age',
+					filter: "agNumberColumnFilter",
+					filterParams: {
+						filterOptions: ["equals", "lessThan", "greaterThan"],
+						suppressAndOrCondition: true
+					}
+				},
+				{
+					headerName: 'Country',
+					field: 'country',
+					filter: "agSetColumnFilter",
+          filterParams: { values: countries() }
+				},
+				{
+					headerName: 'Date',
+					field: 'date',
+					filter: "agSetColumnFilter",
+          filterParams: {
+            values: ["2000", "2004", "2008", "2012"]
+          }
+				},
+				{
+					headerName: 'Sport',
+					field: 'sport',
+					filter: false,
+					sortable: false
+				}
+			],
       defaultColDef: {
 				resizable: true,
 				sortable: true,
@@ -49,14 +78,13 @@ class Table extends Component {
       cacheOverflowSize: 1,
       maxConcurrentDatasourceRequests: 1,
       infiniteInitialRowCount: 100,
-      maxBlocksInCache: 10
+			maxBlocksInCache: 10,
+			getRowNodeId: function(item) {
+        return item.id;
+      },
 		};
 
 		this.onGridReady = this.onGridReady.bind(this);
-	}
-
-	componentDidMount() {
-		
 	}
 
 	onGridReady(params) {
@@ -64,6 +92,10 @@ class Table extends Component {
     this.gridColumnApi = params.columnApi;
 
     const updateData = data => {			
+			data = data.map((d, index) => {
+				d.id = "R" + (index + 1);
+				return d;
+      });
 			const fakeServer = FakeServer(data);
 			const dataSource = ServerSideDatasource(fakeServer);
 			params.api.setDatasource(dataSource);
