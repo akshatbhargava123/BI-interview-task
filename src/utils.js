@@ -163,7 +163,7 @@ export function sortData(sortModel, data) {
       var sortColModel = sortModel[k];
       var valueA = a[sortColModel.colId];
       var valueB = b[sortColModel.colId];
-      if (valueA == valueB) {
+      if (valueA === valueB) {
         continue;
       }
       var sortDirection = sortColModel.sort === "asc" ? 1 : -1;
@@ -189,11 +189,11 @@ export function filterData(filterModel, data) {
     if (filterModel.age) {
       var age = item.age;
       var allowedAge = parseInt(filterModel.age.filter);
-      if (filterModel.age.type == "equals") {
+      if (filterModel.age.type === "equals") {
         if (age !== allowedAge) {
           continue;
         }
-      } else if (filterModel.age.type == "lessThan") {
+      } else if (filterModel.age.type === "lessThan") {
         if (age >= allowedAge) {
           continue;
         }
